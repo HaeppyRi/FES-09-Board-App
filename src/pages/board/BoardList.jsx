@@ -6,7 +6,7 @@ import BoardListItem from "@pages/board/BoardListItem";
 import { memberState } from "@recoil/user/atoms.mjs";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 // import { useEffect, useState } from "react";
@@ -24,7 +24,6 @@ function BoardList(){
     suspense: true,
   });
 
-  // 순서 주의  => 페이지네이션 페이지로 바로 이동(useQuery 앞에 쓰면 이동 안됨)
   useEffect(() => {
     refetch();
   }, [searchParams.toString()]);
@@ -40,11 +39,12 @@ function BoardList(){
   const navigate = useNavigate();
   const handleNewPost = () => {
     if(!user){
-      const gotoLogin = confirm('로그인 후 이용 가능합니다. \n로그인 페이지로 이동하시겠습니까?');
-
+      const gotoLogin = confirm('로그인 후 이용 가능합니다.\n로그인 페이지로 이동하시겠습니까?');
+      gotoLogin && navigate('/users/login');
+    }else{
+      navigate(`/boards/new`);
     }
   }
-
 
   const itemList = data?.item?.map(item => <BoardListItem key={ item._id } item={ item } />);
 
